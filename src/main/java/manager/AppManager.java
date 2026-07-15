@@ -27,7 +27,7 @@ public class AppManager {
 
     @BeforeMethod(alwaysRun = true)
     public void setup(Method method){
-        //driver = new ChromeDriver();
+
         if(browser.equals(Browser.CHROME.browserName())){
             driver = new ChromeDriver();
         }

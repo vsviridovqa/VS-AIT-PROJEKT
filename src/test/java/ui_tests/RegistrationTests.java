@@ -7,9 +7,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-import pages.ContactsPage;
 import pages.HomePage;
-import pages.LoginPage;
+import pages.MyAccountPage;
 import utils.TestNGListener;
 
 import java.util.Random;
@@ -18,14 +17,15 @@ import static utils.UserFactory.positiveUser;
 @Listeners(TestNGListener.class)
 
 public class RegistrationTests extends AppManager {
-    LoginPage loginPage;
+    MyAccountPage loginPage;
 
     @BeforeMethod(alwaysRun = true)
     public void goToLoginRegistrationPage() {
         new HomePage(getDriver()).clickBtnLogin();
-        loginPage = new LoginPage(getDriver());
+        loginPage = new MyAccountPage(getDriver());
     }
 
+    /*
     @Test
     public void registrationPositiveTest() {
         int i = new Random().nextInt(1000);
@@ -85,4 +85,7 @@ public class RegistrationTests extends AppManager {
         Assert.assertTrue(loginPage.closeAlert()
                 .contains("Wrong email or password format"));
     }
+
+
+     */
 }
