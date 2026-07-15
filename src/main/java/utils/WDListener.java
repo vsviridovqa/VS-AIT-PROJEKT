@@ -13,12 +13,14 @@ import java.lang.reflect.Method;
 public class WDListener implements WebDriverListener {
     Logger logger = LoggerFactory.getLogger(WDListener.class);
 
+
     @Override
     public void onError(Object target, Method method, Object[] args,
                         InvocationTargetException e) {
         WebDriverListener.super.onError(target, method, args, e);
-        logger.error("created exception {}", e.toString());
-        //logger.error("created exception "+ e);
+        logger.error("created exception in method {} with cause: {}",
+                method.getName(),
+                e.getCause() != null ? e.getCause().toString() : e.toString());
     }
 
     @Override

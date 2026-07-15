@@ -17,7 +17,7 @@ import java.lang.reflect.Method;
 
 public class AppManager {
 
-    private WebDriver driver;
+    public WebDriver driver;
     public WebDriver getDriver() {
         return driver;
     }
@@ -43,10 +43,10 @@ public class AppManager {
         driver = new EventFiringDecorator<>(webDriverListener).decorate(driver);
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterMethod(alwaysRun = false)
     public void tearDown(Method method){
         if(driver !=null){
-            driver.quit();
+            // driver.quit();
             logger.info("stop testing with method --> "+ method.getName());
         }
     }

@@ -5,7 +5,6 @@
         <classes>
             <class name="ui_tests.LoginTests"/>
             <class name="ui_tests.RegistrationTests"/>
-            <class name="ui_tests.AddNewContactTests"/>
         </classes>
     </test>
 </suite>

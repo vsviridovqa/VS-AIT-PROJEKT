@@ -7,7 +7,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.PropertiesReader;
+
+import java.time.Duration;
 
 // https://www.my-ait.com/
 public class HomePage extends BasePage {
@@ -18,7 +22,7 @@ public class HomePage extends BasePage {
                 (driver, 10), this);
     }
 
-    @FindBy(xpath = "button[data-testid='handle-button']")
+    @FindBy(css = "button[data-testid='handle-button']")
     WebElement btnLogIn;
 
     @FindBy(css = "[data-testid='switchToEmailLink'] button")
@@ -31,12 +35,12 @@ public class HomePage extends BasePage {
     WebElement inputFieldPassword;
 
     @FindBy(css = "button[data-testid='buttonElement']")
-    WebElement btnLogIn2;
+    WebElement btnLoginInLoginForm;
 
-    @FindBy(css = "//*[text()='Got it!']")
+    @FindBy(id = "cst-cookies-submit")
     WebElement btnGotIt;
 
-    @FindBy(xpath = "//div[@data-testid='handle-button']//div[contains(@class, 'FoC6OJ') and contains(text(), 'vsaitprojekt')]")
+    @FindBy(xpath = "//div[@data-testid='handle-button']//div[contains(text(), 'vsaitprojekt')]")
     WebElement userName;
 
 
@@ -44,8 +48,10 @@ public class HomePage extends BasePage {
         btnLogIn.click();
     }
 
-    public void clickBtnLoginWithEmail(){
-        btnLoginWithEmail.click();
+    public void clickBtnLoginWithEmail() {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.elementToBeClickable(btnLoginWithEmail))
+                .click();
     }
 
     public void clickInputFieldEmail(){
@@ -56,8 +62,8 @@ public class HomePage extends BasePage {
         inputFieldPassword.click();
     }
 
-    public void clickBtnLogin2(){
-        btnLogIn2.click();
+    public void clickBtnLoginInLoginForm(){
+        btnLoginInLoginForm.click();
     }
 
     public void clickBtnGotIt(){
@@ -73,11 +79,17 @@ public class HomePage extends BasePage {
     }
 
 
+
     public boolean validateUserName() {
-        return isTextInElementPresent(userName, "vsaitprojekt");
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.visibilityOf(userName));
+            return isTextInElementPresent(userName, "vsaitprojekt");
+        } catch (Exception e) {
+            logger.error("Page source at failure: {}", driver.getPageSource());
+            return false;
+        }
     }
-
-
 
 
     public void method(){

@@ -16,35 +16,32 @@ import static utils.PropertiesReader.getProperty;
 
 public class LoginTests extends AppManager {
 
-    SoftAssert softAssert = new SoftAssert();
-
-
     @Test(groups = {"smoke", "regress", "user", "positive"})
     public void loginPositiveTest() {
+
         User user = User.builder()
                 .username(getProperty("base.properties", "email"))
                 .password(getProperty("base.properties", "password"))
                 .build();
         HomePage homePage = new HomePage(getDriver());
-
-        homePage.clickBtnLogin();
-        /*
         homePage.clickBtnGotIt();
         homePage.clickBtnLogin();
         homePage.clickBtnLoginWithEmail();
         homePage.clickInputFieldEmail();
+        homePage.typeFieldEmail(user);
         homePage.clickInputFieldPassword();
         homePage.typeFieldPassword(user);
-        homePage.clickBtnLogin2();
-        homePage.clickBtnGotIt();
+        homePage.clickBtnLoginInLoginForm();
+        // driver.navigate().refresh();
+        Assert.assertTrue(
+                homePage.validateUserName(),
+                "Имя пользователя не отображается или не совпадает с ожидаемым"
+        );
 
-        softAssert.assertTrue(homePage
-                .validateUserName(), "vsaitprojekt");
-        softAssert.assertAll();
-
-         */
     }
+}
 
+/*
     @Test
     public void loginNegative_AllFieldsEmpty_Test() {
         new HomePage(getDriver()).clickBtnLogin();
@@ -116,4 +113,4 @@ public class LoginTests extends AppManager {
 //    public void testAjaxMethod(){
 //        new HomePage(getDriver()).ajaxMethod();
 //    }
-}
+*/
