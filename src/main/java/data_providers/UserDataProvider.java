@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+// Wird benutyt f[r Registartiontests
 public class UserDataProvider {
     @DataProvider
     public Iterator<User> dataProviderWrongEmailUserFromFile() {

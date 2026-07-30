@@ -73,15 +73,11 @@ public class HomePage extends BasePage {
         clickWait(btnLogIn);
     }
 
+    private final By btnLoginWithEmailBy = By.cssSelector("[data-testid='switchToEmailLink'] button");
+
     public void clickBtnLoginWithEmail() {
-        try {
-            new WebDriverWait(driver, Duration.ofSeconds(10))
-                    .until(ExpectedConditions.elementToBeClickable(btnLoginWithEmail))
-                    .click();
-        } catch (Exception e) {
-            logger.warn("Обычный клик не прошёл (перехвачен другим элементом), кликаем через JS");
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btnLoginWithEmail);
-        }
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(btnLoginWithEmailBy)).click();
     }
 
     public void clickOptionMyAccount() {

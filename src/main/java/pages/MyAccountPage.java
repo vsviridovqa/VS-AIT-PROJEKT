@@ -33,16 +33,13 @@ public class MyAccountPage extends BasePage {
 
     public void clickbtnUpdateInfo() {
         clickWait(btnUpdateInfo);
-        pause(2000);
+        pause(6);
     }
 
     public void clickFieldNewDisplayName() {
         clickWait(fieldNewDisplayName);
     }
 
-    // public void clickFieldNewDisplayNameClear() {
-    //    clickWait(fieldNewDisplayNameClear);
-   // }
 
     public void typeFieldNewDisplayName(String text) {
         fieldNewDisplayName.click();

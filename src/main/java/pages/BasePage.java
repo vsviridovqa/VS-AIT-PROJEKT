@@ -21,7 +21,7 @@ public abstract class BasePage {
 
     public void clickWait(WebElement element) {
         try {
-            new WebDriverWait(driver, Duration.ofSeconds(5))
+            new WebDriverWait(driver, Duration.ofSeconds(10))
                     .until(ExpectedConditions.elementToBeClickable(element)).click();
         } catch (org.openqa.selenium.ElementClickInterceptedException e) {
             logger.warn("Обычный клик перехвачен другим элементом, пробуем через JS", e);

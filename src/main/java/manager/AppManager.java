@@ -47,11 +47,11 @@ public class AppManager {
         driver = new EventFiringDecorator<>(webDriverListener).decorate(driver);
     }
 
-    @AfterMethod(alwaysRun = false)
+    @AfterMethod(alwaysRun = true)
     public void tearDown(Method method){
-        if(driver !=null){
-            // driver.quit();
-            logger.info("stop testing with method --> "+ method.getName());
+        if(driver != null){
+            driver.quit();
+            logger.info("stop testing with method --> " + method.getName());
         }
     }
 

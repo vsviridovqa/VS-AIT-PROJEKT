@@ -24,10 +24,5 @@ public class Unit5DisplayInfoTest extends AppManager {
         myAccountPage.typeFieldNewDisplayName(newDisplayName);
         myAccountPage.clickbtnUpdateInfo();
         Assert.assertEquals(myAccountPage.getProfileDisplayName(), newDisplayName);
-        BasePage.pause(5);
-        String expectedUsername = getProperty("base.properties", "username");
-        myAccountPage.clickFieldNewDisplayName();
-        myAccountPage.typeFieldNewDisplayName(expectedUsername);
-        myAccountPage.clickbtnUpdateInfo();
     }
 }

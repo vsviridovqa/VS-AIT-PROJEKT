@@ -1,6 +1,7 @@
 package utils;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.events.WebDriverListener;
@@ -71,14 +72,17 @@ public class WDListener implements WebDriverListener {
 
     @Override
     public void afterClick(WebElement element) {
-        WebDriverListener.super.afterClick(element);
-        logger.info("After click on element: {}", element.getTagName());
+        try {
+            logger.info("After click on element: {}", element.getTagName());
+        } catch (StaleElementReferenceException e) {
+            logger.info("After click on element: stale");
+        }
     }
 
     @Override
     public void afterMaximize(WebDriver.Window window) {
         WebDriverListener.super.afterMaximize(window);
-        logger.info("After maximize window size is {}",window.getSize());
+        logger.info("After maximize window size is {}", window.getSize());
     }
 
     @Override
