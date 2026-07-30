@@ -15,20 +15,8 @@ public abstract class BasePage {
     Logger logger = LoggerFactory.getLogger(BasePage.class);
     static WebDriver driver;
 
-
     public void setDriver(WebDriver wd) {
         driver = wd;
-    }
-
-    public boolean isTextInElementPresent(WebElement element, String text) {
-        try {
-            return new WebDriverWait(driver, Duration.ofSeconds(5))
-                    .until(ExpectedConditions
-                            .textToBePresentInElement(element, text));
-        } catch (RuntimeException e) {
-            logger.error("create exception", e);
-        }
-        return false;
     }
 
     public void clickWait(WebElement element) {
@@ -47,11 +35,40 @@ public abstract class BasePage {
         }
     }
 
-    public boolean isURLContainsText(String text) {
+    public static void pause(int seconds) {
+        try {
+            Thread.sleep(seconds * 1000L);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public String closeAlert() {
+        Alert alert = new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.alertIsPresent());
+        String text = alert.getText();
+        alert.accept();
+        return text;
+    }
+
+    public boolean isTextInElementPresent(WebElement element, String text) {
         try {
             return new WebDriverWait(driver, Duration.ofSeconds(5))
                     .until(ExpectedConditions
-                            .urlContains(text));
+                            .textToBePresentInElement(element, text));
+        } catch (RuntimeException e) {
+            logger.error("create exception", e);
+        }
+        return false;
+    }
+
+    public boolean isElementClickable(WebElement element) {
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions
+                            .elementToBeClickable(element));
+            return true;
         } catch (RuntimeException e) {
             e.printStackTrace();
             System.out.println("created exception");
@@ -71,25 +88,15 @@ public abstract class BasePage {
         return false;
     }
 
-    public boolean isElementClickable(WebElement element) {
+    public boolean isURLContainsText(String text) {
         try {
-            new WebDriverWait(driver, Duration.ofSeconds(5))
+            return new WebDriverWait(driver, Duration.ofSeconds(5))
                     .until(ExpectedConditions
-                            .elementToBeClickable(element));
-            return true;
+                            .urlContains(text));
         } catch (RuntimeException e) {
             e.printStackTrace();
             System.out.println("created exception");
         }
         return false;
-    }
-
-
-    public String closeAlert() {
-        Alert alert = new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.alertIsPresent());
-        String text = alert.getText();
-        alert.accept();
-        return text;
     }
 }

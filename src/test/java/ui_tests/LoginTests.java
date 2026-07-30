@@ -37,6 +37,7 @@ public class LoginTests extends AppManager {
     @Test(groups = {"smoke", "regress", "user"})
     public void loginNegative_AllFieldsEmpty_Test() {
         HomePage homePage = new HomePage(getDriver());
+
         homePage.clickBtnGotIt();
         homePage.clickBtnLogin();
         homePage.clickBtnLoginWithEmail();
@@ -45,7 +46,9 @@ public class LoginTests extends AppManager {
         homePage.clickBtnLoginInLoginForm();
         Assert.assertEquals(homePage.getEmailErrorText(), "Email cannot be blank");
         Assert.assertEquals(homePage.getPasswordErrorText(), "Make sure you enter a password.");
+
     }
+
 
     @Test
     public void loginNegative_EmptyFieldEmail_Test() {

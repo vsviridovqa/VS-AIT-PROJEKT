@@ -1,6 +1,7 @@
 package pages;
 
 import dto.User;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,6 +15,9 @@ import org.openqa.selenium.JavascriptExecutor;
 import java.time.Duration;
 
 public class HomePage extends BasePage {
+
+    private By btnGotItBy = By.id("cst-cookies-submit");
+
     public HomePage(WebDriver driver) {
         setDriver(driver);
         driver.get(PropertiesReader.getProperty("base.properties", "baseUrl"));
@@ -40,8 +44,8 @@ public class HomePage extends BasePage {
     @FindBy(css = "[data-testid='submit'] button")
     WebElement btnLoginInLoginForm;
 
-    @FindBy(id = "cst-cookies-submit")
-    WebElement btnGotIt;
+    // @FindBy(id = "cst-cookies-submit")
+    // WebElement btnGotIt;
 
     @FindBy(xpath = "//*[@data-testid='custom-menu']//*[text()='My Account']")
     WebElement optionMyAccount;
@@ -58,14 +62,26 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//*[text()='Wrong email or password']")
     WebElement passwordStrongErrorText;
 
+    @FindBy(css = "a[data-testid='linkElement-2'][href*='/account/my-groups']")
+    WebElement linkMyGroups;
+
+    public void clickLinkMyGroups() {
+        clickWait(linkMyGroups);
+    }
+
     public void clickBtnLogin() {
         clickWait(btnLogIn);
     }
 
     public void clickBtnLoginWithEmail() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.elementToBeClickable(btnLoginWithEmail))
-                .click();
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.elementToBeClickable(btnLoginWithEmail))
+                    .click();
+        } catch (Exception e) {
+            logger.warn("Обычный клик не прошёл (перехвачен другим элементом), кликаем через JS");
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btnLoginWithEmail);
+        }
     }
 
     public void clickOptionMyAccount() {
@@ -85,16 +101,18 @@ public class HomePage extends BasePage {
     }
 
     public void clickBtnGotIt() {
-        btnGotIt.click();
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.elementToBeClickable(btnGotItBy))
+                    .click();
+        } catch (Exception ignored) {
+        }
     }
 
+
     public void clickBtnHandleButton() {
-        try {
-            clickWait(btnHandleButton);
-        } catch (Exception e) {
-            logger.warn("Обычный клик не прошёл (перехвачен другим элементом), кликаем через JS");
-            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btnHandleButton);
-        }
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.pjvsBR")));
     }
 
     public void typeFieldEmail(User user) {
@@ -108,6 +126,17 @@ public class HomePage extends BasePage {
     public boolean validateURL() {
         try {
             String expectedUrl = PropertiesReader.getProperty("base.properties", "myaccount");
+            return new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.urlToBe(expectedUrl));
+        } catch (Exception e) {
+            logger.error("Page source at failure: {}", driver.getPageSource());
+            return false;
+        }
+    }
+
+    public boolean validateMyGroupsURL() {
+        try {
+            String expectedUrl = PropertiesReader.getProperty("base.properties", "mygroups");
             return new WebDriverWait(driver, Duration.ofSeconds(10))
                     .until(ExpectedConditions.urlToBe(expectedUrl));
         } catch (Exception e) {

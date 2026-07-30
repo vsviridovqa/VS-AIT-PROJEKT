@@ -71,7 +71,7 @@ public class AppManager {
         homePage.typeFieldPassword(user);
         homePage.clickBtnLoginInLoginForm();
         homePage.clickBtnHandleButton();
+
         return homePage;
     }
-
 }

@@ -1,4 +1,7 @@
 package ui_tests;
 
-public class Unit3ProfileTest {
+import manager.AppManager;
+
+public class Unit3ProfileTest extends AppManager {
+
 }
