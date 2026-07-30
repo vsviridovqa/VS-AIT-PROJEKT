@@ -10,9 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TakeScreenShot {
-//    public static void main(String[] args) {
-//       createFileName();
-//    }
 
     private static String createFileName(){
         SimpleDateFormat formater =

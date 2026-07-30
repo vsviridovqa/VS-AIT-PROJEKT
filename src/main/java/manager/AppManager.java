@@ -1,5 +1,6 @@
 package manager;
 
+import dto.User;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -11,9 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import pages.HomePage;
 import utils.WDListener;
 
 import java.lang.reflect.Method;
+
+import static utils.PropertiesReader.getProperty;
 
 public class AppManager {
 
@@ -50,4 +54,24 @@ public class AppManager {
             logger.info("stop testing with method --> "+ method.getName());
         }
     }
+
+    protected HomePage loginAsDefaultUser() {
+        User user = User.builder()
+                .username(getProperty("base.properties", "email"))
+                .password(getProperty("base.properties", "password"))
+                .build();
+
+        HomePage homePage = new HomePage(getDriver());
+        homePage.clickBtnGotIt();
+        homePage.clickBtnLogin();
+        homePage.clickBtnLoginWithEmail();
+        homePage.clickInputFieldEmail();
+        homePage.typeFieldEmail(user);
+        homePage.clickInputFieldPassword();
+        homePage.typeFieldPassword(user);
+        homePage.clickBtnLoginInLoginForm();
+        homePage.clickBtnHandleButton();
+        return homePage;
+    }
+
 }

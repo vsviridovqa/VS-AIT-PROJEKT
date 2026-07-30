@@ -15,6 +15,7 @@ public abstract class BasePage {
     Logger logger = LoggerFactory.getLogger(BasePage.class);
     static WebDriver driver;
 
+
     public void setDriver(WebDriver wd) {
         driver = wd;
     }
@@ -26,8 +27,6 @@ public abstract class BasePage {
                             .textToBePresentInElement(element, text));
         } catch (RuntimeException e) {
             logger.error("create exception", e);
-//            e.printStackTrace();
-//            System.out.println("created exception");
         }
         return false;
     }
@@ -36,8 +35,15 @@ public abstract class BasePage {
         try {
             new WebDriverWait(driver, Duration.ofSeconds(5))
                     .until(ExpectedConditions.elementToBeClickable(element)).click();
+        } catch (org.openqa.selenium.ElementClickInterceptedException e) {
+            logger.warn("Обычный клик перехвачен другим элементом, пробуем через JS", e);
+            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
+        } catch (org.openqa.selenium.TimeoutException e) {
+            logger.warn("Элемент не стал кликабельным за отведённое время, пробуем через JS", e);
+            ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
         } catch (RuntimeException e) {
             logger.error("create exception", e);
+            throw e;
         }
     }
 

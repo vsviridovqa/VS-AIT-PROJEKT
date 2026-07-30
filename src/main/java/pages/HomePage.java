@@ -1,7 +1,6 @@
 package pages;
 
 import dto.User;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -10,10 +9,10 @@ import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.PropertiesReader;
+import org.openqa.selenium.JavascriptExecutor;
 
 import java.time.Duration;
 
-// https://www.my-ait.com/
 public class HomePage extends BasePage {
     public HomePage(WebDriver driver) {
         setDriver(driver);
@@ -22,8 +21,12 @@ public class HomePage extends BasePage {
                 (driver, 10), this);
     }
 
+
     @FindBy(css = "button[data-testid='handle-button']")
     WebElement btnLogIn;
+
+    @FindBy(css = "[data-testid='handle-button']")
+    WebElement btnHandleButton;
 
     @FindBy(css = "[data-testid='switchToEmailLink'] button")
     WebElement btnLoginWithEmail;
@@ -34,18 +37,29 @@ public class HomePage extends BasePage {
     @FindBy(css = "input[id^='input_input_passwordInput']")
     WebElement inputFieldPassword;
 
-    @FindBy(css = "button[data-testid='buttonElement']")
+    @FindBy(css = "[data-testid='submit'] button")
     WebElement btnLoginInLoginForm;
 
     @FindBy(id = "cst-cookies-submit")
     WebElement btnGotIt;
 
-    @FindBy(xpath = "//div[@data-testid='handle-button']//div[contains(text(), 'vsaitprojekt')]")
-    WebElement userName;
+    @FindBy(xpath = "//*[@data-testid='custom-menu']//*[text()='My Account']")
+    WebElement optionMyAccount;
 
+    @FindBy(xpath = "//*[text()='Email cannot be blank']")
+    WebElement emailErrorText;
 
-    public void clickBtnLogin(){
-        btnLogIn.click();
+    @FindBy(xpath = "//*[contains(text(), \"This email doesn't match any account. Try again.\")]")
+    WebElement emailStrongErrorText;
+
+    @FindBy(xpath = "//*[text()='Make sure you enter a password.']")
+    WebElement passwordErrorText;
+
+    @FindBy(xpath = "//*[text()='Wrong email or password']")
+    WebElement passwordStrongErrorText;
+
+    public void clickBtnLogin() {
+        clickWait(btnLogIn);
     }
 
     public void clickBtnLoginWithEmail() {
@@ -54,20 +68,33 @@ public class HomePage extends BasePage {
                 .click();
     }
 
-    public void clickInputFieldEmail(){
-        inputFieldEmail.click();
+    public void clickOptionMyAccount() {
+        clickWait(optionMyAccount);
     }
 
-    public void clickInputFieldPassword(){
-        inputFieldPassword.click();
+    public void clickInputFieldEmail() {
+        clickWait(inputFieldEmail);
     }
 
-    public void clickBtnLoginInLoginForm(){
+    public void clickInputFieldPassword() {
+        clickWait(inputFieldPassword);
+    }
+
+    public void clickBtnLoginInLoginForm() {
         btnLoginInLoginForm.click();
     }
 
-    public void clickBtnGotIt(){
+    public void clickBtnGotIt() {
         btnGotIt.click();
+    }
+
+    public void clickBtnHandleButton() {
+        try {
+            clickWait(btnHandleButton);
+        } catch (Exception e) {
+            logger.warn("Обычный клик не прошёл (перехвачен другим элементом), кликаем через JS");
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btnHandleButton);
+        }
     }
 
     public void typeFieldEmail(User user) {
@@ -78,31 +105,40 @@ public class HomePage extends BasePage {
         inputFieldPassword.sendKeys(user.getPassword());
     }
 
-
-
-    public boolean validateUserName() {
+    public boolean validateURL() {
         try {
-            new WebDriverWait(driver, Duration.ofSeconds(10))
-                    .until(ExpectedConditions.visibilityOf(userName));
-            return isTextInElementPresent(userName, "vsaitprojekt");
+            String expectedUrl = PropertiesReader.getProperty("base.properties", "myaccount");
+            return new WebDriverWait(driver, Duration.ofSeconds(10))
+                    .until(ExpectedConditions.urlToBe(expectedUrl));
         } catch (Exception e) {
             logger.error("Page source at failure: {}", driver.getPageSource());
             return false;
         }
     }
 
-
-    public void method(){
-        WebElement login = driver.findElement(By
-                .xpath("//a[text()='LOGIN']"));
-        WebElement inputEmail = driver.findElement(By
-                .xpath("//input[@name='email']"));
-        login.click();
-        inputEmail.sendKeys("rtyfug@hju.cr");
+    public String getEmailErrorText() {
+        return new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(emailErrorText))
+                .getText();
     }
 
-    public void ajaxMethod(){
-        btnLogIn.click();
-        // inputEmail.sendKeys("etryfg@adse.vbn");
+    public String getEmailStrongErrorText() {
+        return new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(emailStrongErrorText))
+                .getText();
     }
+
+    public String getPasswordErrorText() {
+        return new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(passwordErrorText))
+                .getText();
+    }
+
+    public String getPasswordStrongErrorText() {
+        return new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(passwordStrongErrorText))
+                .getText();
+    }
+
+
 }
